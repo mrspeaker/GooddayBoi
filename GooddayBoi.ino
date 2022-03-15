@@ -151,7 +151,7 @@ bool champion = 0;
 int next_pellet = 0;
 
 char text[16];
-int t;
+unsigned int t;
 
 const int MAX_STARS = 20;
 Star stars[MAX_STARS];
