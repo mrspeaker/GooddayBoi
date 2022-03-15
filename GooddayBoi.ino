@@ -10,14 +10,13 @@
 */
 #include <Arduboy2.h>
 #include <Sprites.h>
+
 Arduboy2 ab;
 Sprites sprites;
 BeepPin1 beep;
 
 constexpr uint8_t frameRate = 30;
-constexpr uint16_t toneGet1 = beep.freq(200);
-constexpr uint16_t toneGet2 = beep.freq(261);
-constexpr uint8_t toneTimeBeep = 250 / (1000 / 30);
+
 constexpr byte W = 8;
 constexpr byte H = 8;
 
@@ -27,7 +26,12 @@ constexpr int PEL_SPAWN_TIME = 30;
 constexpr int COLL_MIN_TIME = 20;
 constexpr float BOUNCE_MULTIPLIER = 3;
 
-constexpr float SIN_T[16] = {
+constexpr uint16_t toneGet1 = beep.freq(200);
+constexpr uint16_t toneGet2 = beep.freq(261);
+constexpr uint8_t toneTimeBeep = 250 / (1000 / 30);
+
+// Can this be PROGMEM?
+constexpr float SIN_T[] = {
   0,
   0.3826,
   0.7071,
@@ -477,8 +481,14 @@ void render_arena(int t) {
 void render_splash() {
   ab.clear();
   render_stars_3d();
-  ab.setCursor(WIDTH / 2 - 15, HEIGHT / 2 - 3);
+
+  byte CENTRE = HEIGHT / 2;
+  
+  ab.setCursor(WIDTH / 2 - 15, CENTRE - 3);
   ab.print(F("READY"));
+
+  sprites.drawOverwrite(15, (SIN_T[(t / 2) % 16] * 2) + CENTRE - (H / 2), img, 1);  
+  sprites.drawOverwrite(WIDTH - 15 - W, (SIN_T[((t / 2) + 3) % 16] * 2) + CENTRE - (H / 2), img, 3);
 }
  
 void update_splash() {
