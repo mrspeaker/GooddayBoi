@@ -2,12 +2,11 @@
    Hello Arduboy World from Mr Speaker.
  
    TODO:
-   - pool ball physics
-   - splash screen
    - choose character
-   - projectile/action
    - keep set score
-   - slight delay between get_pellet and set_pellet
+   - juice on pickup
+   - particles on collision
+   - better sounds
 */
 #include <Arduboy2.h>
 #include <Sprites.h>
@@ -30,21 +29,21 @@ constexpr float BOUNCE_MULTIPLIER = 3;
 
 constexpr float SIN_T[16] = {
   0,
-  0.3826834323650898,
-  0.7071067811865476,
-  0.9238795325112867,
+  0.3826,
+  0.7071,
+  0.9238,
   1,
-  0.9238795325112867,
-  0.7071067811865476,
-  0.3826834323650899,
-  1.2246467991473532e-16,
-  -0.38268343236508967,
-  -0.7071067811865475,
-  -0.9238795325112865,
+  0.9238,
+  0.7071,
+  0.3826,
+  0,
+  -0.3826,
+  -0.7071,
+  -0.9238,
   -1,
-  -0.9238795325112866,
-  -0.7071067811865477,
-  -0.3826834323650904
+  -0.9238,
+  -0.7071,
+  -0.3826
 };
 
 const uint8_t img[] PROGMEM = {
