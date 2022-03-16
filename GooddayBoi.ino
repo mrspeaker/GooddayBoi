@@ -137,15 +137,10 @@ struct Star {
 float stars_dx = 0;
 float stars_dy = 0;
  
-struct Pellet {
-  float x;
-  float y;
-};
- 
 int state = 0;
 Pop p1 = {};
 Pop p2 = {} ;
-Pellet pel = {};
+Pop pel = {};
 
 bool champion = 0;
 int next_pellet = 0;
@@ -273,7 +268,7 @@ void play_tone(uint16_t tone, uint8_t time) {
   // beep.tone(tone, time);
 }
  
-void get_pellet(Pellet *pel, Pop *p) {
+void get_pellet(Pop *pel, Pop *p) {
   play_tone(p->id == P1_ID ? toneGet1 : toneGet2, toneTimeBeep);
   bool win = false;
   p->score++;
@@ -303,6 +298,10 @@ void set_pellet() {
     int d2 = dist(p2.x + WIDTH, p2.y + HEIGHT, pel.x + WIDTH, pel.y + HEIGHT);
     if (d1 > 20 && d2 > 20) {
       far_enough = true;
+      float dir = random(360) * DEG_TO_RAD;
+      pel.vx = cos(dir); 
+      pel.vy = sin(dir);
+      pel.score++;
     }
   }
 }
@@ -400,13 +399,20 @@ void update_arena(int t) {
   p1.vy *= friction;
   p2.vx *= friction;
   p2.vy *= friction;
- 
+
   // Wrap
   wrap_player(&p1);
   wrap_player(&p2);
  
   // Pickups
-  pel.y += SIN_T[(int)(t / 2.0) % 16] / 2;
+  if (pel.score > 1) {
+    pel.x += pel.vx;
+    pel.y += pel.vy;
+  }
+  else {
+    pel.y += SIN_T[(int)(t / 2.0) % 16] / 2;
+  }
+  wrap_player(&pel);
   
   if (next_pellet > 0) {
     if (--next_pellet == 0) {
